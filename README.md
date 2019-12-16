@@ -1,8 +1,6 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Your Next Page Turner Frontend
 
-## Available Scripts
-
-In the project directory, you can run:
+## Get the backend [here](https://github.com/rebecca-hh-rosen/your_next_page_turner_backend)!
 
 ### `yarn start`
 
