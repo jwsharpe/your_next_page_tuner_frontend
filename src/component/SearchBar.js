@@ -1,6 +1,5 @@
 import React from "react";
-import { Input } from "@material-ui/core";
-
+import { TextField } from "@material-ui/core";
 const SearchBar = props => {
   const _handleSearch = e => {
     e.persist();
@@ -9,11 +8,10 @@ const SearchBar = props => {
   };
 
   return (
-    <Input
+    <TextField
       name="search"
       onChange={_handleSearch}
       value={props.query}
-      placeholder="search"
       label="Search"
       variant="outlined"
       fullWidth

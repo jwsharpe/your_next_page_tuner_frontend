@@ -1,53 +1,33 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import Book from "./component/Book";
 import RecBar from "./component/RecBar";
 import SearchBar from "./component/SearchBar";
 
-export default class App extends Component {
-  state = {
-    books: [],
-    query: "",
-    recs: []
-  };
+const App = () => {
+  const [books, setBooks] = useState([]);
+  const [query, setQuery] = useState("");
+  const [recs, setRecs] = useState([]);
 
-  componentDidMount() {
-    this._fetchBooks();
-  }
+  useEffect(() => {
+    _fetchBooks();
+  }, [books.length]);
 
-  _fetchBooks = () => {
+  const _fetchBooks = () => {
     fetch("http://localhost:5000/books")
       .then(e => e.json())
-      .then(books => {
-        for (let i = 0; i < 10; i++) {
-          let b = books[0][i].genre.replace("[", "");
-          b = b.replace("]", "");
-          b = b.replace("'", "");
-        }
-        this.setState({ books: books[0] }, () => console.log(this.state.books));
-      });
+      .then(books => setBooks(books[0]));
   };
 
-  _setRecs = recs => {
-    this.setState({
-      query: "",
-      recs: recs
-    });
-  };
+  const _filterBooks = () => {
+    let filteredBooks = [...books];
 
-  _filterBooks = () => {
-    const books = [...this.state.books];
-
-    let filteredBooks = books;
-
-    if (this.state.query.length && !this.state.recs.length) {
+    if (query.length && !recs.length) {
       filteredBooks = books.filter(book =>
-        ("" + book.titles)
-          .toLowerCase()
-          .includes(this.state.query.toLowerCase())
+        ("" + book.titles).toLowerCase().includes(query.toLowerCase())
       );
     }
 
-    if (this.state.recs && this.state.recs.length) {
+    if (recs && recs.length) {
       filteredBooks = books.filter(book => {
         return (
           1 +
@@ -59,34 +39,27 @@ export default class App extends Component {
     }
 
     return filteredBooks.map(book => (
-      <Book setRecs={this._setRecs} key={book.index} {...book} />
+      <Book setRecs={setRecs} key={book.index} {...book} />
     ));
   };
 
-  _clearRecs = () => {
-    this.setState({
-      query: "",
-      recs: []
-    });
+  const _clearRecs = () => {
+    setQuery("");
+    setRecs([]);
   };
 
-  _setQuery = text => {
-    this.setState({ query: text });
-  };
+  return (
+    <>
+      <div id="search">
+        {recs.length ? (
+          <RecBar book={recs[0]} clearRecs={_clearRecs} />
+        ) : (
+          <SearchBar setQuery={setQuery} query={query} />
+        )}
+      </div>
+      <ul>{_filterBooks()}</ul>
+    </>
+  );
+};
 
-  render() {
-    return (
-      <>
-        {/* <button onClick={this._fetchBooks}>Fetch Books</button> */}
-        <div id="search">
-          {this.state.recs.length ? (
-            <RecBar book={this.state.recs[0]} clearRecs={this._clearRecs} />
-          ) : (
-            <SearchBar setQuery={this._setQuery} query={this.state.query} />
-          )}
-        </div>
-        <ul>{this._filterBooks()}</ul>
-      </>
-    );
-  }
-}
+export default App;
