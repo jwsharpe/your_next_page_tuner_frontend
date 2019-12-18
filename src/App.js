@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Book from "./component/Book";
 import RecBar from "./component/RecBar";
 import SearchBar from "./component/SearchBar";
+import Header from "./component/Header";
 
 const App = () => {
   const [books, setBooks] = useState([]);
@@ -50,6 +51,7 @@ const App = () => {
 
   return (
     <>
+      <Header />
       <div id="search">
         {recs.length ? (
           <RecBar book={recs[0]} clearRecs={_clearRecs} />
