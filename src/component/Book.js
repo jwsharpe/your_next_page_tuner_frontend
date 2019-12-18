@@ -1,24 +1,18 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { Button } from "@material-ui/core";
 
-export default class Book extends Component {
-  state = {
-    opened: false
+export default function Book(props) {
+  const [opened, setOpened] = useState(false);
+
+  const _toggleOpen = () => {
+    setOpened(!opened);
   };
 
-  toggleOpen = () => {
-    this.setState(prev => {
-      return {
-        opened: !prev.opened
-      };
-    });
-  };
-
-  _handleSubmit = e => {
+  const _findRecommendations = e => {
     e.preventDefault();
 
     const body = {
-      text: this.props.titles
+      text: props.titles
     };
     const content = {
       method: "POST",
@@ -32,34 +26,32 @@ export default class Book extends Component {
       .then(res => res.json())
       .then(e => {
         console.log(e);
-        this.props.setRecs(["" + this.props.titles, ...e]);
+        props.setRecs(["" + props.titles, ...e]);
       });
   };
 
-  render() {
-    return (
-      <li className="card" onClick={this.toggleOpen}>
-        <h6>{this.props.authors}</h6>
-        <p>{this.props.titles}</p>
-        {this.state.opened ? (
-          <>
-            <p>
-              {this.props.description} amount:{this.props.pages}
-            </p>
-            <div class="rec-button">
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={this._handleSubmit}
-              >
-                i want mor of dis
-              </Button>
-            </div>
-          </>
-        ) : (
-          ""
-        )}
-      </li>
-    );
-  }
+  return (
+    <li className="card" onClick={_toggleOpen}>
+      <h6>{props.authors}</h6>
+      <p>{props.titles}</p>
+      {opened ? (
+        <>
+          <p>
+            {props.description} amount:{props.pages}
+          </p>
+          <div class="rec-button">
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={_findRecommendations}
+            >
+              i want mor of dis
+            </Button>
+          </div>
+        </>
+      ) : (
+        ""
+      )}
+    </li>
+  );
 }
