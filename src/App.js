@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Book from "./component/Book";
-import { Input, Button } from "@material-ui/core";
+import RecBar from "./component/RecBar";
+import SearchBar from "./component/SearchBar";
 
 export default class App extends Component {
   state = {
@@ -8,6 +9,10 @@ export default class App extends Component {
     query: "",
     recs: []
   };
+
+  componentDidMount() {
+    this._fetchBooks();
+  }
 
   _fetchBooks = () => {
     fetch("http://localhost:5000/books")
@@ -21,10 +26,6 @@ export default class App extends Component {
         this.setState({ books: books[0] }, () => console.log(this.state.books));
       });
   };
-
-  componentDidMount() {
-    this._fetchBooks();
-  }
 
   _setRecs = recs => {
     this.setState({
@@ -68,9 +69,8 @@ export default class App extends Component {
       recs: []
     });
   };
-  _handleSearch = e => {
-    e.persist();
-    const text = e.target.value;
+
+  _setQuery = text => {
     this.setState({ query: text });
   };
 
@@ -80,29 +80,9 @@ export default class App extends Component {
         {/* <button onClick={this._fetchBooks}>Fetch Books</button> */}
         <div id="search">
           {this.state.recs.length ? (
-            <>
-              <h1>{this.state.recs[0]}</h1>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={this._clearRecs}
-                fullWidth
-                type="submit"
-                name="clear"
-              >
-                Clear Recs
-              </Button>
-            </>
+            <RecBar book={this.state.recs[0]} clearRecs={this._clearRecs} />
           ) : (
-            <Input
-              name="search"
-              onChange={this._handleSearch}
-              value={this.state.query}
-              placeholder="search"
-              label="Search"
-              variant="outlined"
-              fullWidth
-            />
+            <SearchBar setQuery={this._setQuery} query={this.state.query} />
           )}
         </div>
         <ul>{this._filterBooks()}</ul>
