@@ -31,7 +31,7 @@ const App = () => {
       filteredBooks = books.filter(book => {
         return (
           1 +
-          this.state.recs.findIndex(recTitle => {
+          recs.findIndex(recTitle => {
             return recTitle === "" + book.titles;
           })
         );
