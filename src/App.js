@@ -13,10 +13,10 @@ const App = () => {
     _fetchBooks();
   }, [books.length]);
 
-  const _fetchBooks = () => {
-    fetch("http://localhost:5000/books")
-      .then(e => e.json())
-      .then(books => setBooks(books[0]));
+  const _fetchBooks = async () => {
+    const res = await fetch("http://localhost:5000/books");
+    const json = await res.json();
+    setBooks(json[0]);
   };
 
   const _filterBooks = () => {
