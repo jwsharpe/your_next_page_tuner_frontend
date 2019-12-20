@@ -8,12 +8,13 @@ export default function Book(props) {
     setOpened(!opened);
   };
 
-  const _findRecommendations = e => {
+  const _findRecommendations = async e => {
     e.preventDefault();
 
     const body = {
       text: props.titles
     };
+
     const content = {
       method: "POST",
       headers: {
@@ -22,12 +23,10 @@ export default function Book(props) {
       },
       body: JSON.stringify(body)
     };
-    fetch("http://localhost:5000/books", content)
-      .then(res => res.json())
-      .then(e => {
-        console.log(e);
-        props.setRecs(["" + props.titles, ...e]);
-      });
+
+    const res = await fetch("http://localhost:5000/books", content);
+    const json = res.json();
+    props.setRecs(["" + props.titles, ...json]);
   };
 
   return (
