@@ -15,7 +15,7 @@ export default function Book(props) {
 
   const _findRecommendations = async e => {
     e.preventDefault();
-
+    props.setLoading(true);
     const body = {
       text: props.titles
     };
@@ -30,8 +30,10 @@ export default function Book(props) {
     };
 
     const res = await fetch("http://localhost:5000/books", content);
-    const json = res.json();
+    const json = await res.json();
+    console.log(json);
     props.setRecs(["" + props.titles, ...json]);
+    props.setLoading(false);
   };
 
   return (

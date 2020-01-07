@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import Book from "./component/Book";
 import RecBar from "./component/RecBar";
 import SearchBar from "./component/SearchBar";
+import ReactLoading from "react-loading";
 import Header from "./component/Header";
 
 const App = () => {
   const [books, setBooks] = useState([]);
   const [query, setQuery] = useState("");
   const [recs, setRecs] = useState([]);
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     _fetchBooks();
@@ -16,8 +18,8 @@ const App = () => {
   const _fetchBooks = async () => {
     const res = await fetch("http://localhost:5000/books");
     const json = await res.json();
-    console.log(json[0]);
     setBooks(json[0]);
+    setLoading(false);
   };
 
   const _filterBooks = () => {
@@ -41,13 +43,21 @@ const App = () => {
     }
 
     return filteredBooks.map(book => (
-      <Book setRecs={setRecs} key={book.index} {...book} />
+      <Book
+        setRecs={setRecs}
+        key={book.index}
+        isLoading={isLoading}
+        setLoading={setLoading}
+        {...book}
+      />
     ));
   };
 
   const _clearRecs = () => {
+    setLoading(true);
     setQuery("");
     setRecs([]);
+    setLoading(false);
   };
 
   return (
@@ -60,7 +70,12 @@ const App = () => {
           <SearchBar setQuery={setQuery} query={query} />
         )}
       </div>
-      <ul>{_filterBooks()}</ul>
+
+      {isLoading ? (
+        <ReactLoading type={"spin"} color={"#000"} height={36} width={36} />
+      ) : (
+        <ul>{_filterBooks()}</ul>
+      )}
     </>
   );
 };
