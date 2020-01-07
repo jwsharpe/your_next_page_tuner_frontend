@@ -4,8 +4,13 @@ import { Button } from "@material-ui/core";
 export default function Book(props) {
   const [opened, setOpened] = useState(false);
 
-  const _toggleOpen = () => {
-    setOpened(!opened);
+  const _toggleOpen = e => {
+    const buttonTarget = e.target.closest("button");
+    if (buttonTarget) {
+      if (buttonTarget.id !== "rec-toggle-button") setOpened(!opened);
+    } else {
+      setOpened(!opened);
+    }
   };
 
   const _findRecommendations = async e => {
@@ -40,9 +45,11 @@ export default function Book(props) {
           </p>
           <div class="rec-button">
             <Button
+              id="rec-toggle-button"
               variant="outlined"
               color="primary"
               onClick={_findRecommendations}
+              title="hi"
             >
               i want mor of dis
             </Button>
