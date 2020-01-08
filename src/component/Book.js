@@ -31,7 +31,6 @@ export default function Book(props) {
 
     const res = await fetch("http://localhost:5000/books", content);
     const json = await res.json();
-    console.log(json);
     props.setRecs(["" + props.titles, ...json]);
     props.setLoading(false);
   };
