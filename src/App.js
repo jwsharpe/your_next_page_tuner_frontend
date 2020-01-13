@@ -18,8 +18,8 @@ const App = () => {
   const _fetchBooks = async () => {
     const res = await fetch("http://localhost:5000/books");
     const json = await res.json();
-    console.log(json[0]);
-    setBooks(json[0]);
+    console.log(json);
+    setBooks(json);
     setLoading(false);
   };
 

@@ -31,7 +31,8 @@ export default function Book(props) {
 
     const res = await fetch("http://localhost:5000/books", content);
     const json = await res.json();
-    props.setRecs(["" + props.titles, ...json]);
+    const titles = json.map(e => e.titles);
+    props.setRecs(["" + props.titles, ...titles]);
     props.setLoading(false);
   };
 
@@ -41,9 +42,7 @@ export default function Book(props) {
       <p>{props.titles}</p>
       {opened ? (
         <>
-          <p>
-            {props.description} amount:{props.pages}
-          </p>
+          <p>{props.description}</p>
           <div class="rec-button">
             <Button
               id="rec-toggle-button"
