@@ -35,7 +35,6 @@ const SearchContainer = props => {
       )}
       <h4>{props.curBook.titles}</h4>
       <p>{props.curBook.description}</p>
-      <Button title="want mor" onClick={_findRecommendations} />
     </div>
   );
 };
