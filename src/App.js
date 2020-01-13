@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import Book from "./component/Book";
-import RecBar from "./component/RecBar";
-import SearchBar from "./component/SearchBar";
+
 import ReactLoading from "react-loading";
 import Header from "./component/Header";
+import BookContainer from "./container/BookContainer";
+import SearchContainer from "./container/SearchContainer";
 
 const App = () => {
   const [books, setBooks] = useState([]);
+  const [curBook, setCurBook] = useState({});
   const [query, setQuery] = useState("");
   const [recs, setRecs] = useState([]);
   const [isLoading, setLoading] = useState(true);
@@ -18,40 +19,8 @@ const App = () => {
   const _fetchBooks = async () => {
     const res = await fetch("http://localhost:5000/books");
     const json = await res.json();
-    console.log(json);
     setBooks(json);
     setLoading(false);
-  };
-
-  const _filterBooks = () => {
-    let filteredBooks = [...books];
-
-    if (query.length && !recs.length) {
-      filteredBooks = books.filter(book =>
-        ("" + book.titles).toLowerCase().includes(query.toLowerCase())
-      );
-    }
-
-    if (recs && recs.length) {
-      filteredBooks = books.filter(book => {
-        return (
-          1 +
-          recs.findIndex(recTitle => {
-            return recTitle === "" + book.titles;
-          })
-        );
-      });
-    }
-
-    return filteredBooks.map(book => (
-      <Book
-        setRecs={setRecs}
-        key={book.index}
-        isLoading={isLoading}
-        setLoading={setLoading}
-        {...book}
-      />
-    ));
   };
 
   const _clearRecs = () => {
@@ -64,19 +33,31 @@ const App = () => {
   return (
     <>
       <Header />
-      <div id="search">
-        {recs.length ? (
-          <RecBar book={recs[0]} clearRecs={_clearRecs} />
+
+      <div className="item-container">
+        <SearchContainer
+          recs={recs}
+          curBook={curBook}
+          setRecs={setRecs}
+          setLoading={setLoading}
+          clearRecs={_clearRecs}
+          setQuery={setQuery}
+          query={query}
+        />
+        {isLoading ? (
+          <ReactLoading type={"spin"} color={"#000"} height={36} width={36} />
         ) : (
-          <SearchBar setQuery={setQuery} query={query} />
+          <BookContainer
+            books={books}
+            query={query}
+            recs={recs}
+            setRecs={setRecs}
+            setCurBook={setCurBook}
+            isLoading={isLoading}
+            setLoading={setLoading}
+          />
         )}
       </div>
-
-      {isLoading ? (
-        <ReactLoading type={"spin"} color={"#000"} height={36} width={36} />
-      ) : (
-        <ul>{_filterBooks()}</ul>
-      )}
     </>
   );
 };

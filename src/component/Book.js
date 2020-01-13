@@ -13,51 +13,16 @@ export default function Book(props) {
     }
   };
 
-  const _findRecommendations = async e => {
-    e.preventDefault();
-    props.setLoading(true);
-    const body = {
-      text: props.titles
-    };
-
-    const content = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      },
-      body: JSON.stringify(body)
-    };
-
-    const res = await fetch("http://localhost:5000/books", content);
-    const json = await res.json();
-    const titles = json.map(e => e.titles);
-    props.setRecs(["" + props.titles, ...titles]);
-    props.setLoading(false);
-  };
-
   return (
-    <li className="card" onClick={_toggleOpen}>
-      <h6>{props.authors}</h6>
-      <p>{props.titles}</p>
-      {opened ? (
-        <>
-          <p>{props.description}</p>
-          <div class="rec-button">
-            <Button
-              id="rec-toggle-button"
-              variant="outlined"
-              color="primary"
-              onClick={_findRecommendations}
-              title="hi"
-            >
-              i want mor of dis
-            </Button>
-          </div>
-        </>
-      ) : (
-        ""
-      )}
+    <li onClick={() => props.setCurBook(props)}>
+      <div className="item-card-image-container">
+        <img src={props.img} className="item-card-image" />
+      </div>
+      <div className="item-card-body">
+        <div className="item-card-title">{props.titles}</div>
+        <div className="item-card-description">Author: {props.authors}</div>
+        <div className="item-card-description">ISBN: {+props.isbn}</div>
+      </div>
     </li>
   );
 }
